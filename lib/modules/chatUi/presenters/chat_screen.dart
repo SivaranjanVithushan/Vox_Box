@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:vox_box/core/theme_data/colour_scheme.dart';
-import 'package:vox_box/modules/home/presenters/widget/message_bubble.dart';
+import 'package:vox_box/modules/chatUi/presenters/widget/message_bubble.dart';
 import 'package:vox_box/modules/shared_widget/top_app_bar.dart';
 
 import '../model/message.dart';
