@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyBV6cx6YAp_IIIxM5o_oPnyf6WdG5sy7Ro</string>
+	<key>GCM_SENDER_ID</key>
+	<string>99486222259</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.voxBox</string>
+	<key>PROJECT_ID</key>
+	<string>voxbox-8da27</string>
+	<key>STORAGE_BUCKET</key>
+	<string>voxbox-8da27.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:99486222259:ios:301a31c7db4bbc09f1adc6</string>
+</dict>
+</plist>

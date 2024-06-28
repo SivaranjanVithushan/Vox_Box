@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "99486222259",
+    "project_id": "voxbox-8da27",
+    "storage_bucket": "voxbox-8da27.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:99486222259:android:30e0b20341e96cdbf1adc6",
+        "android_client_info": {
+          "package_name": "com.example.vo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAv9knbPtJHvPlEcUJPDdUzdNoNeJUEGsU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
