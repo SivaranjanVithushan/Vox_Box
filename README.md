@@ -26,7 +26,7 @@ VoxBox is a real-time chat application built using Flutter, Firebase Authenticat
 #### Image Sharing
 
 - **Firebase Storage**: Images are uploaded to Firebase Storage, and the image URLs are stored in the Realtime Database as part of the message data.
-- **Image Picker**: The `image_picker` package is used to allow users to select images from their gallery.
+- **Image Picker**: The `file_picker` package is used to allow users to select images from their gallery.
 
 #### Copy Box ID
 - **Copy Box ID**: Users can copy the Box ID to their clipboard, making it easy to share the chat room ID with others. This feature uses the `clipboard` package.
@@ -58,7 +58,7 @@ dependencies:
   firebase_database: ^10.0.4
   firebase_storage: ^10.0.3
   google_sign_in: ^5.1.0
-  image_picker: ^0.8.4+4
+  file_picker: ^0.8.4+4
   clipboard: ^0.1.4
   flutter_svg: ^1.0.0
 ```
