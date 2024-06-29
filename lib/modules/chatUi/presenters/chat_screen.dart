@@ -1,8 +1,13 @@
+import 'dart:io';
+
+import 'package:clipboard/clipboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:vox_box/core/theme_data/colour_scheme.dart';
 import 'package:vox_box/modules/chatUi/presenters/widget/message_bubble.dart';
 import 'package:vox_box/modules/shared_widget/top_app_bar.dart';
@@ -58,13 +63,13 @@ class _ChatScreenState extends State<ChatScreen> {
     }
     setState(() {
       _userId = user!.uid;
-      _userName = user!.displayName ?? "Unknown User";
+      _userName = user.displayName ?? "Unknown User";
       _userProfileImage = user.photoURL ?? "https://via.placeholder.com/150";
     });
   }
 
-  void _sendMessage() {
-    if (_controller.text.trim().isNotEmpty) {
+  void _sendMessage({String? imageUrl}) {
+    if (_controller.text.trim().isNotEmpty || imageUrl != null) {
       final newMessage = Message(
         text: _controller.text,
         senderId: _userId,
@@ -72,6 +77,7 @@ class _ChatScreenState extends State<ChatScreen> {
         senderImage: _userProfileImage,
         time: DateTime.now(),
         status: MessageStatus.sent,
+        imageUrl: imageUrl,
       );
 
       _messagesRef.push().set(newMessage.toMap());
@@ -88,6 +94,30 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      final file = File(pickedFile.path);
+      final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('chat_images/$_roomId/$fileName');
+      final uploadTask = storageRef.putFile(file);
+      final snapshot = await uploadTask.whenComplete(() => {});
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+      _sendMessage(imageUrl: downloadUrl);
+    }
+  }
+
+  void _copyBoxId() {
+    FlutterClipboard.copy(_roomId).then((value) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Box ID copied to clipboard')),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,6 +127,7 @@ class _ChatScreenState extends State<ChatScreen> {
           Navigator.pop(context);
         },
         title: _roomName,
+        onRightArrowPressed: _copyBoxId,
       ),
       body: Container(
         margin: const EdgeInsets.only(top: 8),
@@ -124,6 +155,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     senderImage: _messages[index].senderImage,
                     time: _messages[index].time,
                     status: _messages[index].status,
+                    imageUrl: _messages[index].imageUrl,
                   );
                 },
               ),
@@ -140,6 +172,10 @@ class _ChatScreenState extends State<ChatScreen> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
+          IconButton(
+            icon: Icon(Icons.image, color: primarybackground),
+            onPressed: _pickImage,
+          ),
           Expanded(
             child: SizedBox(
               height: 48.0, // Set a fixed height for the TextField
@@ -171,6 +207,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
           const SizedBox(width: 8.0),
+
           // Send button
           Material(
             color: primarybackground,

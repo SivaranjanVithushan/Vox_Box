@@ -5,6 +5,7 @@ class Message {
   final String senderImage;
   final DateTime time;
   final MessageStatus status;
+  final String? imageUrl;
 
   Message({
     required this.text,
@@ -13,6 +14,7 @@ class Message {
     required this.senderImage,
     required this.time,
     required this.status,
+    this.imageUrl,
   });
 
   //create fromMap
@@ -24,6 +26,7 @@ class Message {
       senderImage: map['senderImage'] as String,
       time: DateTime.parse(map['time'] as String),
       status: MessageStatus.values[map['status'] as int],
+      imageUrl: map['imageUrl'] as String?,
     );
   }
 
@@ -36,6 +39,7 @@ class Message {
       'senderImage': senderImage,
       'time': time.toIso8601String(),
       'status': status.index,
+      'imageUrl': imageUrl,
     };
   }
 }
