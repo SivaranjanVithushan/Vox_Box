@@ -6,8 +6,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:vox_box/core/theme_data/colour_scheme.dart';
 import 'package:vox_box/modules/chatUi/presenters/widget/message_bubble.dart';
 import 'package:vox_box/modules/shared_widget/top_app_bar.dart';
@@ -95,10 +95,10 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      final file = File(pickedFile.path);
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(type: FileType.image);
+    if (result != null && result.files.single.path != null) {
+      final file = File(result.files.single.path!);
       final fileName = DateTime.now().millisecondsSinceEpoch.toString();
       final storageRef = FirebaseStorage.instance
           .ref()
