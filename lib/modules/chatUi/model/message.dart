@@ -1,6 +1,6 @@
 class Message {
   final String text;
-  final bool isSentByMe;
+  final String senderId;
   final String senderName;
   final String senderImage;
   final DateTime time;
@@ -8,7 +8,7 @@ class Message {
 
   Message({
     required this.text,
-    required this.isSentByMe,
+    required this.senderId,
     required this.senderName,
     required this.senderImage,
     required this.time,
@@ -19,7 +19,7 @@ class Message {
   factory Message.fromMap(Map<dynamic, dynamic> map) {
     return Message(
       text: map['text'] as String,
-      isSentByMe: map['isSentByMe'] as bool,
+      senderId: map['senderId'] as String,
       senderName: map['senderName'] as String,
       senderImage: map['senderImage'] as String,
       time: DateTime.parse(map['time'] as String),
@@ -31,7 +31,7 @@ class Message {
   Map<String, dynamic> toMap() {
     return {
       'text': text,
-      'isSentByMe': isSentByMe,
+      'senderId': senderId,
       'senderName': senderName,
       'senderImage': senderImage,
       'time': time.toIso8601String(),
@@ -40,4 +40,4 @@ class Message {
   }
 }
 
-enum MessageStatus { sent, seen }
+enum MessageStatus { sent, delivered, read }
