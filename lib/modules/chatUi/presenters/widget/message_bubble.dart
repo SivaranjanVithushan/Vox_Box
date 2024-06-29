@@ -104,10 +104,10 @@ class MessageBubble extends StatelessWidget {
                                 if (isSentByMe) ...[
                                   SizedBox(width: 5.0),
                                   Icon(
-                                    status == MessageStatus.seen
+                                    status == MessageStatus.delivered
                                         ? Icons.done_all_outlined
                                         : Icons.done_all_outlined,
-                                    color: status == MessageStatus.seen
+                                    color: status == MessageStatus.sent
                                         ? Colors.blue
                                         : Colors.white70,
                                     size: 12.0,
