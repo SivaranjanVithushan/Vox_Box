@@ -32,7 +32,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           visible: onRightArrowPressed != null,
           child: IconButton(
             icon: Icon(
-              Icons.arrow_forward,
+              Icons.copy,
               color: secondarybackground,
             ),
             onPressed: onRightArrowPressed,

@@ -33,17 +33,21 @@ class ChatRoomViewModel extends ChangeNotifier {
     }
   }
 
-  Future<String?> joinRoom(String roomId) async {
+  Future<Map<String, String>?> joinRoom(String roomId) async {
     try {
       final snapshot = await _database.child(roomId).once();
       if (snapshot.snapshot.value == null) {
-        return 'Invalid room ID';
+        return null;
       } else {
-        return null; // Successfully joined
+        final roomData = snapshot.snapshot.value as Map;
+        return {
+          'roomId': roomId,
+          'roomName': roomData['name'],
+        };
       }
     } catch (e) {
       log('Error joining room: $e');
-      return 'An error occurred while joining the room';
+      return null;
     }
   }
 }

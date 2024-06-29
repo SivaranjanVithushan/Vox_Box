@@ -70,10 +70,10 @@ class _JoinRoomDialogState extends ConsumerState<JoinRoomDialog> {
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
                   viewModel.joinRoom(_boxId).then((result) {
-                    if (result != null) {
+                    if (result == null) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(result),
+                          content: Text('Invalid box ID'),
                           backgroundColor: Colors.red,
                         ),
                       );
@@ -82,9 +82,8 @@ class _JoinRoomDialogState extends ConsumerState<JoinRoomDialog> {
                       Navigator.of(context).pushNamed(
                         '/chat',
                         arguments: {
-                          'roomId': _boxId,
-                          'roomName':
-                              'Room Name' // Fetch room name if necessary
+                          'roomId': result['roomId'],
+                          'roomName': result['roomName'],
                         },
                       );
                     }
