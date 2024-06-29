@@ -61,6 +61,7 @@ dependencies:
   file_picker: ^0.8.4+4
   clipboard: ^0.1.4
   flutter_svg: ^1.0.0
+  flutter_riverpod: ^2.5.1
 ```
 
 ## Setup Instructions
