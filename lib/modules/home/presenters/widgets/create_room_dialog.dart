@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vox_box/core/theme_data/text_theme.dart';
 import 'package:vox_box/modules/home/presenters/chatroom_contoller.dart';
+import 'package:vox_box/modules/shared_widget/input.dart';
 
 class CreateRoomDialog extends ConsumerStatefulWidget {
   @override
@@ -31,28 +32,17 @@ class _CreateRoomDialogState extends ConsumerState<CreateRoomDialog> {
         children: [
           Form(
             key: _formKey,
-            child: TextFormField(
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall!
-                  .copyWith(color: Colors.black),
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(top: 16, bottom: 16, left: 16),
-                hintText: 'Box Name',
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide:
-                        BorderSide(color: Color(0xff34A853), width: 1.0)),
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a room name';
-                }
-                return null;
-              },
-              onSaved: (value) {
-                _boxName = value!;
-              },
+            child: Column(
+              children: [
+                Input(
+                  controller: TextEditingController(),
+                  hintText: 'Box Name',
+                  errorText: 'Please enter a room name',
+                  onSaved: (value) {
+                    _boxName = value!;
+                  },
+                ),
+              ],
             ),
           ),
           SizedBox(height: 16),
