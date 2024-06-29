@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:vox_box/modules/home/presenters/widgets/create_room_dialog.dart';
+import 'package:vox_box/modules/home/presenters/widgets/join_room_dialog.dart';
 import 'package:vox_box/modules/shared_widget/top_app_bar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -9,10 +11,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  TextEditingController _createBoxController = TextEditingController();
-  TextEditingController _joinBoxController = TextEditingController();
-  String? _createErrorMessage;
-  String? _joinErrorMessage;
+  // TextEditingController _createBoxController = TextEditingController();
+  // TextEditingController _joinBoxController = TextEditingController();
+  // String? _createErrorMessage;
+  // String? _joinErrorMessage;
 
   void _showPopupMenu(BuildContext context, Offset offset) async {
     await showMenu(
@@ -48,170 +50,11 @@ class _HomeScreenState extends State<HomeScreen> {
       elevation: 8.0,
     ).then((value) {
       if (value == 'create') {
-        _showCreateDialog(context);
+        showDialog(context: context, builder: (_) => CreateRoomDialog());
       } else if (value == 'join') {
-        _showJoinDialog(context);
+        showDialog(context: context, builder: (_) => JoinRoomDialog());
       }
     });
-  }
-
-  void _showCreateDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Center(
-          child: Material(
-            type: MaterialType.transparency,
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.8,
-              padding: const EdgeInsets.only(
-                  top: 32, left: 16, right: 16, bottom: 32),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Center(
-                    child: Text(
-                      'Create New Box',
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                            color: Colors.black,
-                          ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: Colors.black,
-                        ),
-                    controller: _createBoxController,
-                    decoration: InputDecoration(
-                      hintText: 'Box Name',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      errorText: _createErrorMessage,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.white,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        String boxName = _createBoxController.text.trim();
-
-                        if (boxName.isNotEmpty) {
-                          // Proceed with create action
-                          Navigator.of(context).pop();
-                          // Perform your create action here
-                        } else {
-                          _createErrorMessage =
-                              'Please fill in the Box Name field.';
-                        }
-                      });
-                    },
-                    child: Text('Create'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _showJoinDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Center(
-          child: Material(
-            type: MaterialType.transparency,
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.8,
-              padding: const EdgeInsets.only(
-                  top: 32, left: 16, right: 16, bottom: 32),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Center(
-                    child: Text(
-                      'Join Box',
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                            color: Colors.black,
-                          ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: Colors.black,
-                        ),
-                    controller: _joinBoxController,
-                    decoration: InputDecoration(
-                      hintText: 'Box ID',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      errorText: _joinErrorMessage,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.white,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        String boxId = _joinBoxController.text.trim();
-
-                        if (boxId.isNotEmpty) {
-                          // Proceed with join action
-                          Navigator.of(context).pop();
-                          // Perform your join action here
-                        } else {
-                          _joinErrorMessage =
-                              'Please fill in the Box ID field.';
-                        }
-                      });
-                    },
-                    child: Text('Join'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    _createBoxController.dispose();
-    _joinBoxController.dispose();
-    super.dispose();
   }
 
   @override
