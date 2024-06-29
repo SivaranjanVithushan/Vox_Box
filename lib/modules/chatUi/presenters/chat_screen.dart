@@ -1,9 +1,9 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:vox_box/core/theme_data/colour_scheme.dart';
 import 'package:vox_box/modules/chatUi/presenters/widget/message_bubble.dart';
 import 'package:vox_box/modules/shared_widget/top_app_bar.dart';
-
 import '../model/message.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -12,67 +12,49 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final List<Message> _messages = [
-    Message(
-      text: 'Hello! How are you?',
-      isSentByMe: false,
-      senderName: 'John Doe',
-      senderImage: 'https://via.placeholder.com/150', // Placeholder image URL
-      time: DateTime.now().subtract(Duration(minutes: 5)),
-      status: MessageStatus.seen,
-    ),
-    Message(
-      text:
-          "Great, thanks for letting me know! I really look forward to experiencing it soon. 🎉",
-      isSentByMe: true,
-      senderName: 'Me',
-      senderImage: '',
-      time: DateTime.now().subtract(Duration(minutes: 3)),
-      status: MessageStatus.sent,
-    ),
-    Message(
-      text: 'Does this update fix error 352 for the Engineer character?',
-      isSentByMe: false,
-      senderName: 'John Doe',
-      senderImage: 'https://via.placeholder.com/150', // Placeholder image URL
-      time: DateTime.now().subtract(Duration(minutes: 2)),
-      status: MessageStatus.seen,
-    ),
-    Message(
-      text: 'Oh! They fixed it and upgraded the security further. 🚀',
-      isSentByMe: false,
-      senderName: 'John Doe',
-      senderImage: 'https://via.placeholder.com/150', // Placeholder image URL
-      time: DateTime.now().subtract(Duration(minutes: 2)),
-      status: MessageStatus.seen,
-    ),
-    Message(
-      text: 'Great! Thanks for the update. 😊',
-      isSentByMe: true,
-      senderName: 'Me',
-      senderImage: '',
-      time: DateTime.now().subtract(Duration(minutes: 3)),
-      status: MessageStatus.seen,
-    ),
-  ];
-
+  final List<Message> _messages = [];
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  late DatabaseReference _messagesRef;
+  late String _roomName;
+  late String _roomId;
+  late String _userName;
+  late String _userProfileImage;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)!.settings.arguments as Map;
+    _roomName = args['roomName'];
+    _roomId = args['roomId'];
+    _messagesRef =
+        FirebaseDatabase.instance.ref().child('chat_rooms/$_roomId/messages');
+    _userName = "LoggedInUser"; // Replace with the actual logged in user's name
+    _userProfileImage =
+        "https://via.placeholder.com/150"; // Replace with actual user's profile image URL
+
+    _messagesRef.onChildAdded.listen((event) {
+      final newMessage = Message.fromMap(event.snapshot.value as Map);
+      setState(() {
+        _messages.add(newMessage);
+      });
+      _scrollToBottom();
+    });
+  }
 
   void _sendMessage() {
     if (_controller.text.trim().isNotEmpty) {
-      setState(() {
-        _messages.add(Message(
-          text: _controller.text,
-          isSentByMe: true,
-          senderName: 'Me',
-          senderImage: '',
-          time: DateTime.now(),
-          status: MessageStatus.sent,
-        ));
-        _controller.clear();
-      });
-      // Scroll to the bottom of the list
+      final newMessage = Message(
+        text: _controller.text,
+        isSentByMe: true,
+        senderName: _userName,
+        senderImage: _userProfileImage,
+        time: DateTime.now(),
+        status: MessageStatus.sent,
+      );
+
+      _messagesRef.push().set(newMessage.toMap());
+      _controller.clear();
       _scrollToBottom();
     }
   }
@@ -93,7 +75,7 @@ class _ChatScreenState extends State<ChatScreen> {
         onLeftArrowPressed: () {
           Navigator.pop(context);
         },
-        title: "Dev Guild",
+        title: _roomName,
       ),
       body: Container(
         margin: const EdgeInsets.only(top: 8),
