@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:vox_box/core/theme_data/colour_scheme.dart';
 import 'package:vox_box/modules/chatUi/presenters/widget/message_bubble.dart';
 import 'package:vox_box/modules/shared_widget/top_app_bar.dart';
@@ -18,6 +20,7 @@ class _ChatScreenState extends State<ChatScreen> {
   late DatabaseReference _messagesRef;
   late String _roomName;
   late String _roomId;
+  late String _userId;
   late String _userName;
   late String _userProfileImage;
 
@@ -29,9 +32,8 @@ class _ChatScreenState extends State<ChatScreen> {
     _roomId = args['roomId'];
     _messagesRef =
         FirebaseDatabase.instance.ref().child('chat_rooms/$_roomId/messages');
-    _userName = "LoggedInUser"; // Replace with the actual logged in user's name
-    _userProfileImage =
-        "https://via.placeholder.com/150"; // Replace with actual user's profile image URL
+
+    _initializeUser();
 
     _messagesRef.onChildAdded.listen((event) {
       final newMessage = Message.fromMap(event.snapshot.value as Map);
@@ -42,11 +44,30 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
+  Future<void> _initializeUser() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+      AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      user =
+          (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+    }
+    setState(() {
+      _userId = user!.uid;
+      _userName = user!.displayName ?? "Unknown User";
+      _userProfileImage = user.photoURL ?? "https://via.placeholder.com/150";
+    });
+  }
+
   void _sendMessage() {
     if (_controller.text.trim().isNotEmpty) {
       final newMessage = Message(
         text: _controller.text,
-        isSentByMe: true,
+        senderId: _userId,
         senderName: _userName,
         senderImage: _userProfileImage,
         time: DateTime.now(),
@@ -98,7 +119,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 itemBuilder: (context, index) {
                   return MessageBubble(
                     text: _messages[index].text,
-                    isSentByMe: _messages[index].isSentByMe,
+                    isSentByMe: _messages[index].senderId == _userId,
                     senderName: _messages[index].senderName,
                     senderImage: _messages[index].senderImage,
                     time: _messages[index].time,
