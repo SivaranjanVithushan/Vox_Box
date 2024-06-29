@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'core/constants/routes.dart';
 import 'core/theme_data/colour_scheme.dart';
 import 'core/theme_data/text_theme.dart';
@@ -26,12 +27,13 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Empower',
+      title: 'VoxBox',
       themeMode: ThemeMode.light,
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: lightColorScheme,
         // Font Themes
+        fontFamily: GoogleFonts.roboto().fontFamily,
         textTheme: textTheme,
         // Elevated button default theme
       ),
